@@ -1,2 +1,21 @@
-# jjyaoao_tools
-my first tools package which about translate task!!!
+# jjyaoao的工具包
+
+> 目前已有功能：
+
+文本工具箱：
+
+1. 分词
+2. 词<-->表转换（json vocab dict）
+3. 过滤错误词汇
+4. 提取写入xml
+5. 流式输入处理
+6. 合并、拆分语料
+7. 数据集划分
+8. 上、下采样
+9. 打乱平行语料
+10. 单(双)语去重
+11. 翻译数据处理（一键）[加工中]
+12. 后处理
+13. fast_align抽取词典
+14. RAS（随机替换近义词）
+15. 罕见词、乱码过滤（中文）
