@@ -19,21 +19,21 @@ python -m pip install -r requirements.txt -i http://pypi.douban.com/simple/ --tr
 
 ```bash
 若要在linux环境测试，请使用
-vim nmt_tools/cut_zh.sh
+vim my_tools/cut_zh.sh
 ### Esc进入命令行运行模式
 ### : set ff=unix
 ```
 
 ```bash
 # 1.单进程
-python nmt_tools/cut_zh.py src_file tgt_file
+python my_tools/cut_zh.py src_file tgt_file
 
 # 2.多进程
 workers=4
-bash nmt_tools/cut_zh.sh  $workers src_file tgt_file
+bash my_tools/cut_zh.sh  $workers src_file tgt_file
 
 # 3.example:
-bash nmt_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
+bash my_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
 ```
 
 ```bash
@@ -52,7 +52,7 @@ bash nmt_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
 > 格式完全一样，只是从 zh 改为 th
 
 ```bash
-bash nmt_tools/cut_th.sh 4 data/train.th data/train.tok.th
+bash my_tools/cut_th.sh 4 data/train.th data/train.tok.th
 ```
 
 ```bash
@@ -74,21 +74,21 @@ json->vocab(paddle)->dict(fairseq)
 
 ```bash
 # 1.json 转 paddle vocab
-#python nmt_tools/json2vocab.py $infile $outfile $min_freq(optional)
-python nmt_tools/json2vocab.py data/train.bpe.zh.json data/vocab.zh
+#python my_tools/json2vocab.py $infile $outfile $min_freq(optional)
+python my_tools/json2vocab.py data/train.bpe.zh.json data/vocab.zh
 
 
 # 2.json 转 fairseq dict
-#python nmt_tools/json2dict.py $infile $outfile $min_freq(optional)
-python nmt_tools/json2dict.py data/train.bpe.zh.json data/dict1.zh.txt
+#python my_tools/json2dict.py $infile $outfile $min_freq(optional)
+python my_tools/json2dict.py data/train.bpe.zh.json data/dict1.zh.txt
 
 # 3.paddle vocab 转 fairseq dict
-# python nmt_tools/vocab2dict.py $infile $outfile $min_freq(optional)
-python nmt_tools/vocab2dict.py data/vocab.zh data/dict.zh.txt
+# python my_tools/vocab2dict.py $infile $outfile $min_freq(optional)
+python my_tools/vocab2dict.py data/vocab.zh data/dict.zh.txt
 
 # 4.fairseq dict 转  paddle vocab
-# python nmt_tools/dict2vocab.py $infile $outfile
-python nmt_tools/dict2vocab.py data/dict.zh.txt data/vocab.zh
+# python my_tools/dict2vocab.py $infile $outfile
+python my_tools/dict2vocab.py data/dict.zh.txt data/vocab.zh
 ```
 
 ```bash
@@ -123,10 +123,10 @@ dict1.zh.txt
 # 1.下载权重（放nmt_data_tools目录下）
 wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 # 2.过滤平行语料
-python ./nmt_tools/data_filter.py --src-lang $SRC --tgt-lang $TRG --in-prefix data/train --out-prefix data/trainlang --threshold 0.5
+python ./my_tools/data_filter.py --src-lang $SRC --tgt-lang $TRG --in-prefix data/train --out-prefix data/trainlang --threshold 0.5
 
 # 3.example
-python ./nmt_tools/data_filter.py --src-lang zh --tgt-lang en --in-prefix data/train --out-prefix data/trainlang --threshold 0.1
+python ./my_tools/data_filter.py --src-lang zh --tgt-lang en --in-prefix data/train --out-prefix data/trainlang --threshold 0.1
 # result: lang id filter| [967/1000] samples retained, [33/1000] were deleted.
 ```
 
@@ -151,14 +151,14 @@ print(labels,scores)
 
 ```bash
 # 长度检测 (用于tokenize后，bpe前)
-# python nmt_tools/check_pair.py <in_prefix> <SRC> <TRG>  <upper> <ratio> <write_trash>(0/1)
-python nmt_tools/check_pair.py data/train.tok zh th  175 1.5 0
+# python my_tools/check_pair.py <in_prefix> <SRC> <TRG>  <upper> <ratio> <write_trash>(0/1)
+python my_tools/check_pair.py data/train.tok zh th  175 1.5 0
 # 默认write_trash=0，只打印，不写trash；0时会把范围外的异常数据写入 <inprefix.trash.lang>
 
 # 长度过滤 (替代moses的clean-corpus；一般用于bpe之前)
 # 有些明显长度不匹配的能过滤掉，比如一个3个词，另一边30个
 #（1-250，比例1:2.5或2.5:1）,长度过滤往往丢的数据最多，多手下留情哈。
-python nmt_tools/length_filter.py --src-lang zh --tgt-lang th --in-prefix  data/train.bpe --out-prefix data/train.clean --low 1 --up 200 --ratio 1.5 --remove-bpe --wt
+python my_tools/length_filter.py --src-lang zh --tgt-lang th --in-prefix  data/train.bpe --out-prefix data/train.clean --low 1 --up 200 --ratio 1.5 --remove-bpe --wt
 # --remove-bpe可选，开启后判断长度时删掉@@ ，不影响写入； --wt可选，效果同check_pair的write_trash
 ```
 
@@ -183,10 +183,10 @@ step info: {'1.5': 494654, '2': 194131, '2.5': 118475, '3': 65409}
 
 ```bash
 # 1.command:
-python nmt_tools/process_xml.py $infile $outfolder
+python my_tools/process_xml.py $infile $outfolder
 
 # 2.example:
-python nmt_tools/process_xml.py data/xml/bgzh/val.bg-zh.bg.xml data/
+python my_tools/process_xml.py data/xml/bgzh/val.bg-zh.bg.xml data/
 # result:
 #total 1000 lines.
 #write to data/val.bg-zh.bg.txt success.
@@ -206,10 +206,10 @@ python nmt_tools/process_xml.py data/xml/bgzh/val.bg-zh.bg.xml data/
 
 ```bash
 # 1.command:
-bash nmt_tools/process_xml_folder.sh <infolder> <outfolder>
+bash my_tools/process_xml_folder.sh <infolder> <outfolder>
 
 # 2.example:
-bash nmt_tools/process_xml_folder.sh data/xml/ xml_out
+bash my_tools/process_xml_folder.sh data/xml/ xml_out
 ```
 
 ```bash
@@ -235,7 +235,7 @@ xml_out/
 
 ```bash
 # 1.生成xml
-python nmt_tools/write_xml.py data/train.en data/result.xml
+python my_tools/write_xml.py data/train.en data/result.xml
 ```
 
 ```bash
@@ -255,13 +255,13 @@ python nmt_tools/write_xml.py data/train.en data/result.xml
 
 ```bash
 # 1.command:
-python nmt_tools/stream_preprocess.py <infile> <outfile> <1(towhole)|2(tostream)> <lang>
+python my_tools/stream_preprocess.py <infile> <outfile> <1(towhole)|2(tostream)> <lang>
 
 # 2.example:
 # 流式->整句（data/whole.zh）
-python nmt_tools/stream_preprocess.py data/stream.zh data/whole.zh 1 zh
+python my_tools/stream_preprocess.py data/stream.zh data/whole.zh 1 zh
 # 整句->流式（data/stream2.zh）
-python nmt_tools/stream_preprocess.py data/whole.zh data/stream2.zh 2 zh
+python my_tools/stream_preprocess.py data/whole.zh data/stream2.zh 2 zh
 ```
 
 ```bash
@@ -281,9 +281,9 @@ python nmt_tools/stream_preprocess.py data/whole.zh data/stream2.zh 2 zh
 # 1.python
 # python {sys.argv[0]} <infile1> <infile2> <outfile> <sep> (space/tab)
 # 空格分隔
-python nmt_tools/merge.py data/train.zh data/train.en data/outfile.txt space
+python my_tools/merge.py data/train.zh data/train.en data/outfile.txt space
 # 制表符分割
-python nmt_tools/merge.py data/train.zh data/train.en data/outfile.txt tab
+python my_tools/merge.py data/train.zh data/train.en data/outfile.txt tab
 
 # 2.shell
 paste data/train.zh data/train.en > data/outfile.txt
@@ -307,10 +307,10 @@ cut -f 2 data/outfile.txt > data/cut.en
 
 ```bash
 # 1.command:
-python nmt_tools/train_dev_split.py <src-lang> <tgt-lang> <inprefix> <outfolder> <dev len>
+python my_tools/train_dev_split.py <src-lang> <tgt-lang> <inprefix> <outfolder> <dev len>
 
 # 2.example:
-python nmt_tools/train_dev_split.py zh en data/train data 500
+python my_tools/train_dev_split.py zh en data/train data 500
 # 从train中随机取500条到data/dev.zh/en，其余的data/train.zh/en,result:
 # dev为验证集
 write to data\train.zh success.
@@ -325,12 +325,12 @@ write to data\dev.en success.
 
 ```bash
 # 1.command:
-python nmt_tools/upsample.py <src-lang> <tgt-lang> <inprefix> <outfolder> <upsample len>
+python my_tools/upsample.py <src-lang> <tgt-lang> <inprefix> <outfolder> <upsample len>
 
 # 2.example:
 # train为文件名，zh、en为文件后缀
 # 将不够的语句不断随机刷新凑够10000
-python nmt_tools/upsample.py zh en data/train data 10000
+python my_tools/upsample.py zh en data/train data 10000
 # result:
 write to data\upsample.zh success.
 write to data\upsample.en success.
@@ -344,10 +344,10 @@ write to data\upsample.en success.
 
 ```bash
 # 1.command:
-python nmt_tools/shuffle_pair.py <src_lang> <tgt_lang> <data_prefix> <out_folder>
+python my_tools/shuffle_pair.py <src_lang> <tgt_lang> <data_prefix> <out_folder>
 
 # 2.example:
-python nmt_tools/shuffle_pair.py zh en data/train data/
+python my_tools/shuffle_pair.py zh en data/train data/
 # result:
 write to data/shuffle.zh success.
 write to data/shuffle.en success.
@@ -358,9 +358,9 @@ write to data/shuffle.en success.
 双语去重。（无序，比有序快 25%）
 
 ```bash
-# python nmt_tools/deduplicate_pairs.py  <in_prefix> <src_lang> <tgt_lang>  <workers>
+# python my_tools/deduplicate_pairs.py  <in_prefix> <src_lang> <tgt_lang>  <workers>
 # 会默认写到in_prefix.dedup.lang里,example:
-python nmt_tools/deduplicate_pairs.py  data/train zh en  4
+python my_tools/deduplicate_pairs.py  data/train zh en  4
 # 文件名train.dedip.zh/en
 ```
 
@@ -368,10 +368,10 @@ python nmt_tools/deduplicate_pairs.py  data/train zh en  4
 
 ```bash
 # 1.command:
-python nmt_tools/deduplicate_lines.py --workers $workers files > $outfile
+python my_tools/deduplicate_lines.py --workers $workers files > $outfile
 
 # 2.example:
-python nmt_tools/deduplicate_lines.py --workers 4 data/upsample.zh > data/dedup.zh
+python my_tools/deduplicate_lines.py --workers 4 data/upsample.zh > data/dedup.zh
 wc data/dedup.zh
 # 行数为493、单词数499、字节数47809  data/dedup.zh
 ```
@@ -399,8 +399,8 @@ bash postprocess.sh data/zhen_bpe/train.bpe
 
 ```bash
 # 分词
-bash nmt_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
-bash nmt_tools/cut_zh.sh 4 data/dev.zh data/dev.tok.zh
+bash my_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
+bash my_tools/cut_zh.sh 4 data/dev.zh data/dev.tok.zh
 mv data/train.tok.zh data/train.zh
 mv data/dev.tok.zh data/dev.zh
 # 抽取词典 （data/fast_align/dict.zh-en）
@@ -426,7 +426,7 @@ head -n 10 data/fast_align/dict.zh-en
 随机对齐替换。用词典将 source 的词典词按一定几率替换为其他语言的同义词。
 
 ```bash
-python nmt_tools/replace_word_bilingual.py --langs de;en --dict-path dic --data-path data  --prefix train --num-repeat 1 --moses-detok --replace-prob 0.3 --vocab-size 1000
+python my_tools/replace_word_bilingual.py --langs de;en --dict-path dic --data-path data  --prefix train --num-repeat 1 --moses-detok --replace-prob 0.3 --vocab-size 1000
 
 tree:
 /dic
@@ -475,7 +475,7 @@ si=(w1,w2,...,wn)
 $$ Score(i)=\frac{1}{n}\sum*{k=0}^{k=n}I(freq*{k}<100)\* \frac{（100-freq\_{k})}{100} $$ 对于第 i 个句子 si，有 n 个 word。句子分数 Score(i)为，n 个 word 的分数求平均。指示函数 I 当词频小于 100 时为 1， 对于词频 freq>100 的词，分数为 0；对于 freq<100 的词，分数为归一化的 100-freq，这样词频低就分数高；若乱码多，基本上分数很容易超过 0.5,俺把超过 0.45 的都当初乱码丢掉了。对于 score<0.45 的嫌疑句，俺按规则删掉些乱码词后放回原语料。
 
 ```bash
-# python nmt_tools/zh_abnormal_filter.py --zh-lang zh --other-lang th --in-prefix data_zhth/train.tok --out-prefix data_zhth/train.clean --threshold 0.45 --min-freq 20 --wt
+# python my_tools/zh_abnormal_filter.py --zh-lang zh --other-lang th --in-prefix data_zhth/train.tok --out-prefix data_zhth/train.clean --threshold 0.45 --min-freq 20 --wt
 # 用在tokenize之后，bpe前
 # --wt可选，加了后会把嫌疑句存到out_prefix.update.zh 和out_prefix.trash.zh
 '''
