@@ -1,6 +1,6 @@
 # jjyaoao 的文本工具箱
 
-> 特别鸣谢: https://github.com/MiuGod0126
+> 特别鸣谢: jiaohuix
 
 [TOC]
 
@@ -21,25 +21,25 @@ python -m pip install -r requirements.txt -i http://pypi.douban.com/simple/ --tr
 
 1. 中、泰多进程分词
 
-2. 中：jieba、thulac、ltp，速度如下（10w句，AMD EPYC 7601cpu10核并行）
+2. 中：jieba、thulac、ltp，速度如下（10w 句，AMD EPYC 7601cpu10 核并行）
 
-   注意：ltp使用了torch模型，速度较慢，不建议用来分词；若要用则用cut.py而非cut.sh,因为ltp自带了多核优化。
+   注意：ltp 使用了 torch 模型，速度较慢，不建议用来分词；若要用则用 cut.py 而非 cut.sh,因为 ltp 自带了多核优化。
 
    | jieba | thulac  | ltp   |
    | ----- | ------- | ----- |
    | 4.08s | 16.572s | 1h+.. |
 
-3. data/userwords.txt从[THUOCL：清华大学开放中文词库](http://thuocl.thunlp.org/)提取11类共22w中文词，可以作为用户定义词典提高分词的精度。
+3. data/userwords.txt 从[THUOCL：清华大学开放中文词库](http://thuocl.thunlp.org/)提取 11 类共 22w 中文词，可以作为用户定义词典提高分词的精度。
 
 ```shell
 # bash my_tools/cut.sh <workers> <infile> <outfile>
 # 可选参数：<lang> <backend> <userdict>
-# lang=zh/th, backend=jieba/thulac(chinese segment) 
+# lang=zh/th, backend=jieba/thulac(chinese segment)
 # userdict： 用户定义词典，一行一个词
 
 # exp1: “那么我们都可以在这个平台上面可以拿到它所有源代码去加以运用。”
 # zh-jieba speed=2.42
-bash my_tools/cut.sh 4 data/train.zh data/train.tok.zh 
+bash my_tools/cut.sh 4 data/train.zh data/train.tok.zh
 # zh-thulac speed=3.67s
 bash my_tools/cut.sh 4 data/train.zh data/train.tok.zh zh thulac
 # jieba-res: 那么 我们 都 可以 在 这个 平台 上面 可以 拿到 它 所有 源代码 去 加以 运用 。
@@ -57,15 +57,11 @@ bash my_tools/cut.sh 4 data/train.zh data/train.tok.zh th
 # res: ผม / ฉัน มาจาก สหรัฐอเมริกา
 ```
 
-
-
 ### 2.词表转换
 
 json->vocab(paddle)->dict(fairseq)
 
-
-
-**新增： 多进程获取词典，速度快了2倍多。 22/9/13**
+**新增： 多进程获取词典，速度快了 2 倍多。 22/9/13**
 
 ```shell
 # 单进程
@@ -355,7 +351,7 @@ write to data\upsample.en success.
 
 ### 10.打乱平行语料
 
-新增：可以直接使用shell命令`shuf`进行打乱，对大文件非常友好。
+新增：可以直接使用 shell 命令`shuf`进行打乱，对大文件非常友好。
 
 ```shell
 seed=1
@@ -363,13 +359,13 @@ shuf --random-source=<(yes $seed) train.src > train.shuf.src
 shuf --random-source=<(yes $seed) train.src > train.shuf.tgt
 ```
 
-或者合并文件后shuf，再拆分： 注：paste的分隔符d只能用一个字符，多个字符拼接使用该命令：paste -d '@@@' file1 /dev/null /dev/null file2
+或者合并文件后 shuf，再拆分： 注：paste 的分隔符 d 只能用一个字符，多个字符拼接使用该命令：paste -d '@@@' file1 /dev/null /dev/null file2
 
 ```shell
 paste -d '@@@' train.src /dev/null /dev/null train.tgt | shuf > train.all
 # 取第1列
-cat train.all | awk -F'@@@' '{print $1}' > train.src 
-cat train.all | awk -F'@@@' '{print $2}' > train.tgt 
+cat train.all | awk -F'@@@' '{print $1}' > train.src
+cat train.all | awk -F'@@@' '{print $2}' > train.tgt
 ```
 
 ```bash
@@ -385,7 +381,7 @@ write to data/shuffle.en success.
 
 ### 11.去重
 
-**新增：从语料1中，删除语料2中的数据：**
+**新增：从语料 1 中，删除语料 2 中的数据：**
 
 ```shell
 # python my_tools/drop_specific_pairs.py <src_lang> <tgt_lang> <main_prefix> <drop_prefix>  <workers>
@@ -443,9 +439,9 @@ bash postprocess.sh data/zhen_bpe/train.bpe
 
 ### 14.fast_align 抽取词典
 
-可以直接或间接从MUSE获取词典，见18。
+可以直接或间接从 MUSE 获取词典，见 18。
 
-注：linux环境，可在aistudio运行。
+注：linux 环境，可在 aistudio 运行。
 
 ```shell
 # 1.分词
@@ -468,7 +464,7 @@ head align_output//dict.zh-en
 # python my_tools/dict_filter.py <src_lang> <tgt_lang> <in_file> <out_file> <src_stop_file>(optional) <tgt_stop_file>(optional) <model_path>(optional)
 # src_stop_file和tgt_stop_file是停用词文件，model_path是fasttext的模型权重路径，两个都是可选参数
 # 3.1简易抽取（去除1:m,m:1,m:n的对应）
-python my_tools/dict_filter.py  zh en  align_output/dict.zh-en align_output/dict.zh-en.txt  
+python my_tools/dict_filter.py  zh en  align_output/dict.zh-en align_output/dict.zh-en.txt
 
 # result
 head -n 10 align_output/dict.zh-en.txt
@@ -520,7 +516,7 @@ tree:
 	train.tgt # <lang_id> tgt_text
 ```
 
-**完整文档和demo参考[ras_sample](https://github.com/jiaohuix/nmt_data_tools/blob/main/examples/ras_sample/README.md)**
+**完整文档和 demo 参考[ras_sample](https://github.com/jiaohuix/nmt_data_tools/blob/main/examples/ras_sample/README.md)**
 
 ### 16.⭐ 罕见词、乱码过滤（中文）
 
@@ -556,7 +552,7 @@ def is_all_japanese(strs):
 
 si=(w1,w2,...,wn)
 
-$$ Score(i)=\frac{1}{n}\sum*{k=0}^{k=n}I(freq*{k}<100)\* \frac{（100-freq\_{k})}{100} $$ 
+$$ Score(i)=\frac{1}{n}\sum*{k=0}^{k=n}I(freq*{k}<100)\* \frac{（100-freq\_{k})}{100} $$
 
 对于第 i 个句子 si，有 n 个 word。句子分数 Score(i)为，n 个 word 的分数求平均。指示函数 I 当词频小于 100 时为 1， 对于词频 freq>100 的词，分数为 0；对于 freq<100 的词，分数为归一化的 100-freq，这样词频低就分数高；若乱码多，基本上分数很容易超过 0.5,俺把超过 0.45 的都当初乱码丢掉了。对于 score<0.45 的嫌疑句，俺按规则删掉些乱码词后放回原语料。
 
@@ -584,17 +580,17 @@ Score: [0.829], Sentence: [※ 涴 汊 唒 ＃ § 庈 部 塑 毽 斯 剟 覂 �
 '''
 ```
 
-### 17.ngram语言模型
+### 17.ngram 语言模型
 
-> 处理几句相似但存在错误的句子(ocr输出)
+> 处理几句相似但存在错误的句子(ocr 输出)
 
 ```shell
 # eg1: 昨天早上扔垃圾的时候\t昨天早上扔圾的时候\t咋天早上扔垃圾的时候
 ```
 
-- 我尝试使用以word为单位的ngram模型为句子打分,效果较差,原因是词粒度太大, 打分时容易出现OOV的词,如词表有"雨伞",而要为"我 去 拿 伞" 和 "我 去 拿 平" 两句句子打分时, 因为"伞" 不单独出现在词表, 所以分数一样
-- 最后我用以char为单位的ngram模型对句子进行打分, 缓解了OOV的问题, 并且句子得分很合理,见以下demo:
-- TODO: 1.添加用新语料**更新模型**的功能, 将从新的领域语料得到的ngram的count提高, 从而让得分对领域词更敏感. 2. 以候选句中得分最高的为模板, 找到错误后替换为别的句子中对应词, 取得分高的从而达到**纠错**的效果.
+- 我尝试使用以 word 为单位的 ngram 模型为句子打分,效果较差,原因是词粒度太大, 打分时容易出现 OOV 的词,如词表有"雨伞",而要为"我 去 拿 伞" 和 "我 去 拿 平" 两句句子打分时, 因为"伞" 不单独出现在词表, 所以分数一样
+- 最后我用以 char 为单位的 ngram 模型对句子进行打分, 缓解了 OOV 的问题, 并且句子得分很合理,见以下 demo:
+- TODO: 1.添加用新语料**更新模型**的功能, 将从新的领域语料得到的 ngram 的 count 提高, 从而让得分对领域词更敏感. 2. 以候选句中得分最高的为模板, 找到错误后替换为别的句子中对应词, 取得分高的从而达到**纠错**的效果.
 
 使用如下：
 
@@ -630,7 +626,7 @@ Sentence: 昨天早上扔垃圾的时候, Score: -12.5425 √
 Sentence: 昨天早上扔圾的时候, Score: -13.5297
 Sentence: 咋天早上扔垃圾的时候, Score: -14.132
 '''
-# eg2: 
+# eg2:
 '''
  Sentence: 他似乎总是缺乏一位掌门人应有的清晰思路和价值判断, Score: -4.171 √
  Sentence: 他似夫总似缺乏一位掌门人应有的清晰思路和价紫判断, Score: -10.397
@@ -642,9 +638,9 @@ Sentence: 破送到医院后确认死亡, Score: -12.5591
 '''
 ```
 
-### 18. MUSE多语言词典
+### 18. MUSE 多语言词典
 
-说明： muse的词典是x-en.txt的，以英文为中心，本节利用lang1-en.txt和lang2-en.txt 两个到英文的词典，获取lang1-lang2.txt的词典。
+说明： muse 的词典是 x-en.txt 的，以英文为中心，本节利用 lang1-en.txt 和 lang2-en.txt 两个到英文的词典，获取 lang1-lang2.txt 的词典。
 
 ```shell
 # eg：获取俄中词典
@@ -657,9 +653,9 @@ python my_tools/get_pivot_dict.py ru-en.txt zh-en.txt
 # write to ./ru-zh.txt success, total 13852 lines.
 ```
 
-### 19.Annoy加速相似向量查找
+### 19.Annoy 加速相似向量查找
 
-对于635965x300的词表，构建索引需要26秒，而查找只需1毫秒左右。
+对于 635965x300 的词表，构建索引需要 26 秒，而查找只需 1 毫秒左右。
 
 参考：https://mp.weixin.qq.com/s/clqJhvk-HJnYsTh9tg2VAw
 
@@ -706,7 +702,7 @@ print(f"{word}'s {topk} nearest_tokens",nearest_tokens)
 # 国王's 5 nearest_tokens ['国王', '雅赫摩斯', '雨果·卡佩', '塞利姆', '法王路易']
 ```
 
-### 20.word2vec初始化embedding
+### 20.word2vec 初始化 embedding
 
 ```shell
 # eg: zh-ar
@@ -726,14 +722,12 @@ cd ..
 
 # 3.make zh-ar dictionary by zh-en ar-en
 python ../my_tools/get_pivot_dict.py  data/zh-en.txt data/ar-en.txt
-head -n 8000 data/zh-ar.txt > data/zh-ar.train.txt 
-tail -n +8001 data/zh-ar.txt > data/zh-ar.eval.txt 
+head -n 8000 data/zh-ar.txt > data/zh-ar.train.txt
+tail -n +8001 data/zh-ar.txt > data/zh-ar.eval.txt
 
 # align zh-ar in a common space
 python supervised.py --src_lang zh --tgt_lang ar --src_emb data/wiki.zh.vec --tgt_emb data/wiki.multi.ar.vec --n_refinement 5 --dico_train data/zh-ar.train.txt --dico_eval data/zh-ar.eval.txt
 ```
-
-
 
 ### 21 bpe dropout
 
@@ -750,7 +744,7 @@ bash my_tools/apply_bpedrop_paral.sh  data/train.en data/train.bpe.en data/codes
 
 ### 22. 可视化：len-bleu
 
- 在字节关于篇章机器翻译的工作[Rethinking Document-level Neural Machine Translation](https://aclanthology.org/2022.findings-acl.279.pdf)中提出在不修改网络结构，改变训练方法就能达到很好效果。具体的，把长的篇章按不同分解度等分为若干份，如篇章有16句，则分别分为{1，2，4，8}组，每组分别有16、8、4、2句，将这些不同粒度的语料对混合训练。实验结果显示该方法能显著提升长句的分数，并且在短句上的分数也比句子级翻译模型更好：
+在字节关于篇章机器翻译的工作[Rethinking Document-level Neural Machine Translation](https://aclanthology.org/2022.findings-acl.279.pdf)中提出在不修改网络结构，改变训练方法就能达到很好效果。具体的，把长的篇章按不同分解度等分为若干份，如篇章有 16 句，则分别分为{1，2，4，8}组，每组分别有 16、8、4、2 句，将这些不同粒度的语料对混合训练。实验结果显示该方法能显著提升长句的分数，并且在短句上的分数也比句子级翻译模型更好：
 
 [![VW4VN_ZY2__HK_LG8_1M3~9.png](README/68747470733a2f2f73312e6c6f63696d672e636f6d2f323032332f30322f32382f346431626237333364343834372e706e67.png)](https://camo.githubusercontent.com/0177cf65f9b54e7e30b2aacba4e0b76980b03e93c226b56e17f910a0ddcdabd9/68747470733a2f2f73312e6c6f63696d672e636f6d2f323032332f30322f32382f346431626237333364343834372e706e67)
 
@@ -765,14 +759,14 @@ python visual/len_bleu4.py -t "epoch10,epoch50" -r data/ref.txt -o bleu_len.png 
 
 PS: 颜色就懒得换了。此外，发现一个超好用的画图包：[compare-mt](https://github.com/neulab/compare-mt),可以全面分析不同系统的翻译效果差异。
 
-### 23. 相似句子查找(LASER编码)
+### 23. 相似句子查找(LASER 编码)
 
 见 [search/laser](https://github.com/jiaohuix/nmt_data_tools/blob/main/search/laser/README.md)
 
 ### 24.TextPruner
 
-**[TextPruner](https://github.com/airaria/TextPruner)**是由HFL开发的用于预训练语言模型的模型裁剪的工具包，可以通过词表裁剪、结构裁剪来减少冗余神经元，加快模型训练推理速度。（用于裁剪transformers的模型）
+**[TextPruner](https://github.com/airaria/TextPruner)**是由 HFL 开发的用于预训练语言模型的模型裁剪的工具包，可以通过词表裁剪、结构裁剪来减少冗余神经元，加快模型训练推理速度。（用于裁剪 transformers 的模型）
 
-本节记录下用TextPruner对mbert进行词表裁剪，保留2种语言以适应双向翻译任务。
+本节记录下用 TextPruner 对 mbert 进行词表裁剪，保留 2 种语言以适应双向翻译任务。
 
 见[examples/vocab_prune](https://github.com/jiaohuix/nmt_data_tools/blob/main/examples/vocab_prune/README.md)
