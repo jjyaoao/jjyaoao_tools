@@ -6,6 +6,8 @@
 
 ```bash
 git clone git@github.com:jjyaoao/jjyaoao_tools.git
+# 设置环境变量
+export TOOLS=$PWD/
 cd jjyaoao_tools/nmt_data_tools
 # pip install -r requirements.txt
 python -m pip install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
