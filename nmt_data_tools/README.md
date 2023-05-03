@@ -67,7 +67,7 @@ bash nmt_tools/cut_th.sh 4 data/train.zh data/train.tok.zh
 
 json->vocab(paddle)->dict(fairseq)
 
-**1. json2dict，不再需要从 vocab 中转，且能保留词频信息。 **
+**1. json2dict，不再需要从 vocab 中转，且能保留词频信息。**
 
 **2.json2vocab 和 json2dict 加入 min_freq，参数，支持按照频率过滤词表。**
 
