@@ -7,7 +7,8 @@
 ```bash
 git clone git@github.com:jjyaoao/jjyaoao_tools.git
 cd jjyaoao_tools/nmt_data_tools
-pip install -r requirements.txt
+# pip install -r requirements.txt
+python -m pip install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 ```
 
 ### 1.分词
@@ -51,7 +52,7 @@ bash nmt_tools/cut_zh.sh 4 data/train.zh data/train.tok.zh
 > 格式完全一样，只是从 zh 改为 th
 
 ```bash
-bash nmt_tools/cut_th.sh 4 data/train.zh data/train.tok.zh
+bash nmt_tools/cut_th.sh 4 data/train.th data/train.tok.th
 ```
 
 ```bash
