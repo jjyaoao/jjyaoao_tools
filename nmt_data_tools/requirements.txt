@@ -1,0 +1,13 @@
+jieba
+thulac
+lxml
+fasttext
+tqdm
+subword-nmt
+wget
+sacremoses
+zhconv
+pythainlp
+annoy
+simhash
+sentencepiece
