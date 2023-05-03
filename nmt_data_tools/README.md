@@ -6,7 +6,7 @@
 
 ```bash
 git clone git@github.com:jjyaoao/jjyaoao_tools.git
-cd jjyaoao_tools/Jnmt_data_tools
+cd jjyaoao_tools/nmt_data_tools
 pip install -r requirements.txt
 ```
 
